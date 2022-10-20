@@ -1,0 +1,2 @@
+SELECT TOP(200) * FROM DimStore
+ORDER BY EmployeeCount DESC
