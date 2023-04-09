@@ -36,3 +36,10 @@ USE ContosoRetailDW;
     -- OR
     SELECT * FROM DimProduct
         WHERE BrandName = 'Contoso' OR ColorName = 'White';
+
+    SELECT * FROM DimProduct
+        WHERE BrandName = 'Contoso' OR BrandName = 'Fabrikam';
+
+    -- NOT
+    SELECT * FROM DimEmployee
+        WHERE NOT DepartmentName = 'Marketing';
