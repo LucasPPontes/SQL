@@ -26,3 +26,13 @@ USE ContosoRetailDW;
     SELECT * FROM DimCustomer
         WHERE BirthDate >= '1970-12-31'
         ORDER BY BirthDate DESC
+
+    -- Operadores lógicos
+
+    -- AND
+    SELECT * FROM DimProduct
+        WHERE BrandName = 'Fabrikam' AND ColorName = 'Black';
+
+    -- OR
+    SELECT * FROM DimProduct
+        WHERE BrandName = 'Contoso' OR ColorName = 'White';
