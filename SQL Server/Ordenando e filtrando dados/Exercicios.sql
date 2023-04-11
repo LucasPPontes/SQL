@@ -56,3 +56,20 @@ USE ContosoRetailDW;
         BrandName = 'Litware' 
         AND ProductName LIKE '%Home Theater%'
         AND AvailableForSaleDate = '20090315' -- Quanto trabalhamos com uma coluna com data & hora utilizamos a data nesse formato sem o " - "
+
+-- 6 Imagine que você precise extrair um relatório da tabela DimStore, com informações de lojas. Mas você precisa apenas das lojas que não estão mais funcionando atualmente
+-- a) utilize a coluna de status para filtrar a tabela e trazer apenas as lojas que não estão mais funcionando
+-- b) agora imagine que essa coluna de status não existe na sua tabela. Qual seria a outra forma que você teria de descobrir quais são as lojas que não estão mais funcionando 
+
+USE ContosoRetailDW;
+    -- a)
+    SELECT 
+        * FROM DimStore
+    WHERE 
+        Status = 'Off'
+
+    -- b) 
+    SELECT 
+        * FROM DimStore
+    WHERE 
+        CloseDate IS NOT NULL
