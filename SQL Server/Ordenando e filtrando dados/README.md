@@ -12,3 +12,5 @@
 ### AND mostra as linhas da tabela se todas as condições forem atendidas
 ### OR mostra as linhas da tabela se pelo menos uma das condições for atendida 
 ### NOT simplesmente mostra o oposto do que for considerado no filtro: ex mostra todas as linhas que NÃO forem da marca "Contoso"
+
+### Para executar uma operação antes de outra devemos colocar entre parenteses () 
