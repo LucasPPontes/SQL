@@ -51,7 +51,7 @@ USE ContosoRetailDW;
 USE ContosoRetailDW;
     
     SELECT 
-        * FROM DimProduct
+        ProductKey FROM DimProduct
     WHERE
         BrandName = 'Litware' 
         AND ProductName LIKE '%Home Theater%'
@@ -73,3 +73,62 @@ USE ContosoRetailDW;
         * FROM DimStore
     WHERE 
         CloseDate IS NOT NULL
+
+-- 7 De acordo com a quantidade de funcionários, cada loja receberá uma determinada quantidade de máquinas de café. As lojas serão divididas em 3 categorias:
+-- Categoria 1: de 1 a 20 funcionários > 1 máquina de café
+-- Categoria 2: de 21 a 50 funcionários > 2 máquinas de café
+-- Categoria 3: Acima de 51 funcionários > 3 máquinas de café
+
+-- Identifique, para cada caso, quais lojas de cada uma das 3 categorias acima
+
+USE ContosoRetailDW;
+    
+    -- Categoria 1:
+    SELECT 
+        * FROM DimStore
+    WHERE EmployeeCount BETWEEN 1 AND 20
+
+    -- Categoria 2:
+    SELECT 
+        * FROM DimStore
+    WHERE EmployeeCount BETWEEN 21 AND 50
+
+    -- Categoria 3:
+    SELECT 
+        * FROM DimStore
+    WHERE EmployeeCount > 50
+
+-- 8 A empresa decidiu que todas as televisões de LCD receberão um super desconto no próximo mês. O seu trabalho é fazer uma consulta à tabela DimProduct e retornar os ID's, Nomes e Preços de todos os produtos LCD existentes
+
+USE ContosoRetailDW;
+    
+    SELECT 
+        ClassID, ProductName, UnitPrice
+        FROM DimProduct
+    WHERE 
+        ProductName LIKE '%LCD%'
+
+-- 9 Faça uma lista com todos os produtos das cores: Green, Orange, Black, Silver e Pink. Estes produtos devem ser exclusivamente das marcas: Contoso, Litware e Fabrikam
+
+USE ContosoRetailDW;
+
+    SELECT 
+        * FROM DimProduct
+    WHERE
+        BrandName IN ('Contoso', 'Litware', 'Fabrikam')
+    AND
+        ColorName IN ('Green','Orange', 'Black','Silver','Pink')
+
+-- 10 A empresa possui 16 produtos da marca Contoso, da cor Silver e com um UnitPrice entre 10 e 30. Descubra quais são esses produtos e ordene o resultado em ordem descrecente de acordo com o preço (UnitPrice)
+
+USE ContosoRetailDW;
+
+    SELECT 
+        * FROM DimProduct
+    WHERE
+        BrandName = 'Contoso'
+    AND 
+        ColorName = 'Silver'
+    AND 
+        UnitPrice BETWEEN 10 AND 30
+    ORDER BY UnitPrice DESC
