@@ -56,3 +56,8 @@ USE ContosoRetailDW;
     SELECT * FROM DimEmployee WHERE HireDate BETWEEN '2000-01-1' AND '2000-12-31'
 
     SELECT * FROM DimEmployee WHERE HireDate NOT BETWEEN '2000-01-1' AND '2000-12-31' 
+
+    -- WHERE & IS NULL & IS NOT NULL
+    SELECT * FROM DimCustomer WHERE CompanyName IS NULL
+
+    SELECT * FROM DimCustomer WHERE CompanyName IS NOT NULL
