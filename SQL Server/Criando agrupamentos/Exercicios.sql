@@ -9,7 +9,7 @@ USE ContosoRetailDW;
 -- a)
     SELECT 
         ChannelKey,
-        COUNT(SalesQuantity) AS 'Quantidade vendida'
+        SUM(SalesQuantity) AS 'Quantidade vendida'
     FROM 
         FactSales
     GROUP BY channelKey
@@ -126,4 +126,61 @@ USE ContosoRetailDW;
         DimProduct
     GROUP BY BrandName
 
-    
+-- DIMCUSTOMER
+-- 7 Faça um agrupamento para saber o total de clientes de acordo com o sexo e também a média salarial de acordo com o sexo. Corrija qualquer resultado 'inesperado'
+USE ContosoRetailDW;
+
+    SELECT * FROM DimCustomer
+
+    SELECT 
+        Gender,
+        COUNT(FirstName),
+        AVG(YearlyIncome) AS 'Media salarial'
+    FROM DimCustomer
+    WHERE Gender IS NOT NULL
+    GROUP BY Gender
+
+-- 8 Faça um agrupamento para descobrir a quantidade total de clientes e a média salarial de acordo com o seu nível escolar. Utilize a coluna Education da tabela dimCustumer para fazer esse agrupamento
+
+USE ContosoRetailDW;
+
+    SELECT 
+        COUNT(FirstName) AS 'Contagem de clientes',
+        AVG(YearlyIncome) AS 'Media salarial',
+        Education
+    FROM 
+        DimCustomer
+    WHERE Education IS NOT NULL
+    GROUP BY Education
+
+-- DIMEMPLOYEE
+-- 9 Faça uma tabela resumo mostrando a quantidade total de funcionários de acordo com o Departamento (DepartmentName) e considerar apenas funcionários ativos
+
+USE ContosoRetailDW;
+
+    SELECT * FROM DimEmployee
+
+    SELECT 
+        COUNT(FirstName) AS 'Contagem de funcionários',
+        DepartmentName AS 'Nome departamento'
+    FROM 
+        DimEmployee
+    WHERE Status = 'Current'
+    GROUP BY DepartmentName
+
+-- 10 Faça uma tabela resumo mostrando o total de VacationHours para cada cargo (Title). Você deve considerar apenas as mulheres dos departamentos de production, marketing, engineering e finance, para os funcionários contratados entre os anos 1999 e 2000
+
+USE ContosoRetailDW;
+
+    SELECT * FROM DimEmployee
+
+    SELECT
+        Title,
+        SUM(VacationHours) AS 'Total de horas'
+    FROM 
+        DimEmployee
+    WHERE 
+        Gender = 'F' 
+        AND DepartmentName IN ('Production','Marketing', 'Engineering', 'Finance') 
+        AND HireDate BETWEEN '1999-01-01' AND '2000-12-31'
+    GROUP BY Title

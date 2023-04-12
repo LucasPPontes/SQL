@@ -1,2 +1,2 @@
 # SQL
-## Minhas anotações sobre SQL
+## Anotações básicas sobre SQL
