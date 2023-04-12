@@ -1,0 +1,20 @@
+USE ContosoRetailDW;
+
+    SELECT * FROM DimProduct
+
+-- TOTAL DE LINHAS DE TODA TABELA
+    SELECT 
+        COUNT(*) AS 'TOTAL DE PRODUTOS'
+    FROM 
+        DimProduct
+
+-- TOTAL DE LINHAS DE UMA COLUNA ESPECIFICA
+    SELECT 
+        COUNT(ProductName) AS 'QTDE PRODUTOS'
+    FROM
+        DimProduct
+-- SE A COLUNA TIVER VALORES VAZIOS O VALOR FINAL SERÁ DIFERENTE
+    SELECT
+        COUNT(Size)
+    FROM
+        DimProduct
