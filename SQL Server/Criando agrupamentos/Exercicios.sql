@@ -67,12 +67,13 @@ USE ContosoRetailDW;
         FactOnlineSales
     GROUP BY CustomerKey
     ORDER BY SUM(SalesQuantity) DESC  
--- b) Feito isso, faça um agrupamento de total vendido (SalesQuantity) por ID do produto e descubra quais foram os top 3 produtos mais comprados pelo cliente da letra a)
+-- b) Feito isso, faça um agrupamento de total vendido (SalesQuantity) por ID do produto e descubra quais foram os top 3 produtos mais comprados pelo cliente da letra a)19037
 
     SELECT TOP(3)
         ProductKey AS 'Chave produto',
         SUM(SalesQuantity) AS 'Total vendido'
     FROM FactOnlineSales
+    WHERE CustomerKey = 19037
     GROUP BY ProductKey
     ORDER BY SUM(SalesQuantity) DESC
 
@@ -97,6 +98,7 @@ USE ContosoRetailDW;
         DimProduct
     GROUP BY ClassName
 -- c) Faça um agrupamento de cores e descubra o peso total que cada cor de produto possui
+
     SELECT
         ColorName,
         SUM(Weight) AS 'Peso total'
@@ -118,6 +120,7 @@ USE ContosoRetailDW;
     WHERE BrandName = 'Contoso'
     GROUP BY 
         StockTypeName
+    ORDER BY SUM(Weight) DESC
     
 -- 6 Você seria capaz de confirmar se todas as marcas dos produtos possuem à disposição todas as 16 opções de cores?
 USE ContosoRetailDW;
@@ -157,6 +160,7 @@ USE ContosoRetailDW;
         DimCustomer
     WHERE Education IS NOT NULL
     GROUP BY Education
+    ORDER BY COUNT(FirstName) DESC
 
 -- DIMEMPLOYEE
 -- 9 Faça uma tabela resumo mostrando a quantidade total de funcionários de acordo com o Departamento (DepartmentName) e considerar apenas funcionários ativos
