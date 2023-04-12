@@ -21,7 +21,7 @@
 ## O que não podem se relacionar são duas tabelas fato
 
 # TIPOS DE JOIN
-## INNER JOIN: : retorna somente as linhas que possuem correspondência em ambas as tabelas. Ou seja, apenas os registros que têm um valor correspondente em ambas as tabelas serão retornados.
+## INNER JOIN: retorna somente as linhas que possuem correspondência em ambas as tabelas. Ou seja, apenas os registros que têm um valor correspondente em ambas as tabelas serão retornados.
 
 ## LEFT JOIN (ou LEFT OUTER JOIN): retorna todas as linhas da tabela da esquerda e os registros correspondentes da tabela da direita. Se não houver correspondência, as colunas da tabela da direita serão preenchidas com valores NULL.
 
