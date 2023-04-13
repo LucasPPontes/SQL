@@ -1,15 +1,13 @@
--- LEFT (OUTER) JOIN
-
 SELECT * FROM produtos
 
 SELECT * FROM subcategoria
 
-SELECT  
+SELECT
     produtos.id_produto,
     produtos.nome_produto,
     produtos.id_subcategoria,
     subcategoria.nome_subcategoria
 FROM
-    produtos -- tabela principal
-LEFT JOIN subcategoria
+    produtos
+INNER JOIN subcategoria
     ON produtos.id_subcategoria = subcategoria.id_subcategoria
