@@ -7,7 +7,7 @@ USE ContosoRetailDW;
     SELECT * FROM DimProductSubcategory
 
     SELECT 
-        DimProduct.ProductSubcategoryKey,
+        DimProduct.ProductKey,
         DimProduct.ProductName,
         DimProductSubcategory.ProductSubcategoryName
     FROM 
@@ -63,8 +63,10 @@ USE ContosoRetailDW;
         DimProductCategory.ProductCategoryDescription
     FROM 
         DimProduct
-    LEFT JOIN DimProductCategory
-        ON DimProductCategory.ProductCategoryKey = DimProduct.ProductSubcategoryKey
+    LEFT JOIN DimProductSubcategory
+        ON DimProductSubcategory.ProductCategoryKey = DimProduct.ProductSubcategoryKey
+        LEFT JOIN DimProductCategory
+            ON DimProductCategory.ProductCategoryKey = DimProductSubcategory.ProductCategoryKey
 
 -- 5 A tabela FactStrategyPlan resume o planejamento estratégico da empresa. Cada linha representa um montante destinado a uma determinada AccountKey
 -- a) Faça um SELECT das 100 primeiras linhas de FactStrategyPlan para reconhecer a tabela
@@ -140,12 +142,11 @@ USE ContosoRetailDW;
     SELECT * FROM DimChannel
 
     SELECT 
-        DimProduct.BrandName,
+        DISTINCT DimProduct.BrandName,
         DimChannel.ChannelName
     FROM
-        DimProduct
-    INNER JOIN DimChannel
-        ON DimChannel.ETLLoadID = DimProduct.ETLLoadID
+        DimProduct CROSS JOIN DimChannel
+    WHERE BrandName IN ('Contoso', 'Fabrikam', 'Litware')
     
 -- 9 Neste exercício, você deverá relacionar as tabelas FactOnlineSales com DimPromotion. Identifique a coluna que as duas tabelas têm em comum e utilize-a para criar esse relacionamento
 
@@ -164,11 +165,11 @@ USE ContosoRetailDW;
         FactOnlineSales.SalesAmount
     FROM
         FactOnlineSales
-    LEFT JOIN DimPromotion
+    INNER JOIN DimPromotion
         ON DimPromotion.PromotionKey = FactOnlineSales.PromotionKey
     WHERE 
         DimPromotion.PromotionName <> 'No Discount'
-    ORDER BY FactOnlineSales.DateKey 
+    ORDER BY FactOnlineSales.DateKey ASC
 
 -- 10 Realizar JOIN entre FactSales e as tabelas: DimChannel, DimStore e DimProduct
 
@@ -189,8 +190,10 @@ USE ContosoRetailDW;
         FactSales
     INNER JOIN DimChannel
         ON DimChannel.ChannelKey = FactSales.channelKey
-        INNER JOIN DimStore
-            ON DimChannel.ETLLoadID = DimStore.ETLLoadID
-            INNER JOIN DimProduct
-                ON DimProduct.ETLLoadID = DimStore.ETLLoadID
-    ORDER BY FactSales.SalesAmount DESC
+
+    INNER JOIN DimStore
+        ON DimStore.StoreKey = FactSales.StoreKey
+        
+    INNER JOIN DimProduct
+        ON DimProduct.ProductKey = FactSales.ProductKey
+    ORDER BY SalesAmount DESC
