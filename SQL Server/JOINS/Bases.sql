@@ -26,3 +26,13 @@ VALUES
 (3, 'Câmera Digital'),
 (4, 'Televisão'),
 (5, 'Fone de Ouvido')
+
+CREATE TABLE marcas(
+	id_marca int,
+	marca varchar(30))
+
+INSERT INTO marcas(id_marca, marca)
+VALUES
+	(1, 'Apple'),
+	(2, 'Samsung'),
+	(3, 'Motorola')
