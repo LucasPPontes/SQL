@@ -78,3 +78,75 @@ USE ContosoRetailDW;
     GROUP BY DimProduct.ColorName
     HAVING SUM(FactSales.SalesAmount) >= 3000000
     
+-- 3 Crie um agrupamento do zero. Obs: precisará fazer mais do que 1 INNER JOIN, dado que a relação entre FactSales e DimProductCategory não é direta
+
+USE ContosoRetailDW;
+
+    SELECT TOP(100) * FROM FactSales
+    SELECT TOP(100) * FROM DimProduct
+    SELECT TOP(100) * FROM DimProductSubcategory
+    SELECT TOP(100) * FROM DimProductCategory
+
+    SELECT 
+        DimProductCategory.ProductCategoryName,
+        SUM(FactSales.SalesQuantity) AS 'TOTAL VENDIDO'
+    FROM
+        DimProductCategory
+
+    INNER JOIN DimProductSubcategory
+        ON DimProductCategory.ProductCategoryKey = DimProductSubcategory.ProductCategoryKey
+
+        INNER JOIN DimProduct
+            ON DimProduct.ProductSubcategoryKey = DimProductSubcategory.ProductSubcategoryKey
+
+            INNER JOIN FactSales
+                ON FactSales.ProductKey = DimProduct.ProductKey
+
+    GROUP BY DimProductCategory.ProductCategoryName
+
+-- FACTONLINESALES
+-- 4 a) Você deve fazer uma consulta à tabela FactOnlineSales e descobrir qual é o nome completo do cliente que mais realizou compras online (de acordo com a coluna SalesQuantity) -- 7665
+
+USE ContosoRetailDW;
+
+    SELECT TOP(100) * FROM FactOnlineSales
+    SELECT TOP(100) * FROM DimCustomer
+
+    SELECT TOP(1)
+        DimCustomer.CustomerKey AS 'ID Cliente',
+        DimCustomer.FirstName AS 'Nome',
+        DimCustomer.LastName AS 'Sobrenome',
+        SUM(FactOnlineSales.SalesQuantity) AS 'Qtde Vendida'
+    FROM
+        FactOnlineSales
+    INNER JOIN DimCustomer
+        ON DimCustomer.CustomerKey = FactOnlineSales.CustomerKey
+    WHERE DimCustomer.CustomerType = 'Person'
+    GROUP BY DimCustomer.CustomerKey, DimCustomer.FirstName, DimCustomer.LastName
+    ORDER BY SUM(FactOnlineSales.SalesQuantity) DESC
+
+-- b) Feito isso, faça um agrupamento de produtos e descubra quais foram os top 10 produtos mais comprados pelo cliente da letra a), considerando o nome do produto
+
+    SELECT * FROM DimCustomer
+    SELECT TOP(100) * FROM FactOnlineSales
+    SELECT * FROM DimProduct
+
+    SELECT TOP(10)
+        DimCustomer.CustomerKey AS 'ID Cliente',
+        DimCustomer.FirstName AS 'Nome',
+        DimCustomer.LastName AS 'Sobrenome',
+        DimProduct.ProductName AS 'Nome Produto',
+        SUM(FactOnlineSales.SalesQuantity) AS 'Quantidade Vendida'
+    FROM
+        FactOnlineSales
+    INNER JOIN DimProduct
+        ON FactOnlineSales.ProductKey = DimProduct.ProductKey
+        INNER JOIN DimCustomer
+            ON FactOnlineSales.CustomerKey = DimCustomer.CustomerKey
+    WHERE DimCustomer.CustomerKey = 7665
+    GROUP BY 
+    DimCustomer.CustomerKey, 
+    DimCustomer.FirstName, 
+    DimCustomer.LastName, 
+    DimProduct.ProductName
+    ORDER BY SUM(FactOnlineSales.SalesQuantity) DESC
