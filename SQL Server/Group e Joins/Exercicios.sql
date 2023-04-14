@@ -7,8 +7,8 @@ USE ContosoRetailDW;
     SELECT TOP(100) * FROM DimChannel
 
     SELECT
-        SUM(FactSales.SalesQuantity) AS 'SOMA TOTAL DE VENDAS',
-        DimChannel.ChannelName
+        DimChannel.ChannelName,
+        SUM(FactSales.SalesQuantity) AS 'SOMA TOTAL DE VENDAS'
     FROM
         FactSales
     INNER JOIN DimChannel
@@ -31,25 +31,26 @@ USE ContosoRetailDW;
     INNER JOIN DimStore
         ON DimStore.StoreKey = FactSales.StoreKey
     GROUP BY DimStore.StoreName
+    ORDER BY Dimstore.StoreName
 
--- c) Faça um resumo do valor total vendido (SalesAmount) para cada mês (CalendarMonthLabel) e ano (CalendarYear)
+-- c) Faça um resumo do valor total vendido (SalesQuantity) para cada mês (CalendarMonthLabel) e ano (CalendarYear)
 USE ContosoRetailDW;
 
     SELECT TOP(100) * FROM FactSales
     SELECT TOP(100) * FROM DimDate
 
     SELECT
-        SUM(FactSales.SalesAmount) AS 'Valor total vendido',
         DimDate.CalendarMonthLabel,
-        DimDate.CalendarYear
+        DimDate.CalendarYear,
+        SUM(FactSales.SalesQuantity) AS 'Valor total vendido'
     FROM
         FactSales
     INNER JOIN DimDate
         ON DimDate.Datekey = FactSales.DateKey
-    GROUP BY DimDate.CalendarMonthLabel, DimDate.CalendarYear
-    ORDER BY DimDate.CalendarMonthLabel
+    GROUP BY DimDate.CalendarMonthLabel, DimDate.CalendarYear, dimdate.CalendarMonth
+    ORDER BY Dimdate.CalendarMonth
 
--- 2 Você precisa fazer uma análise de vendas por produtos. O objetivo final é descobrir o valor total vendido (SalesAmount) por produto
+-- 2 Você precisa fazer uma análise de vendas por produtos. O objetivo final é descobrir o valor total vendido (SalesQuantity) por produto
 -- a) Descubra qual é a cor de produto que mais é vendida (de acordo com SalesQuantity)
 USE ContosoRetailDW;
     
@@ -58,7 +59,7 @@ USE ContosoRetailDW;
 
     SELECT TOP(1)
         DimProduct.ColorName,
-        SUM(FactSales.SalesAmount) AS 'TOTAL VENDIDO'
+        SUM(FactSales.SalesQuantity) AS 'TOTAL VENDIDO'
     FROM
         FactSales
     INNER JOIN DimProduct
@@ -70,13 +71,13 @@ USE ContosoRetailDW;
 
     SELECT
         DimProduct.ColorName,
-        SUM(FactSales.SalesAmount) AS 'TOTAL VENDIDO'
+        SUM(FactSales.SalesQuantity) AS 'TOTAL VENDIDO'
     FROM
         FactSales
     INNER JOIN DimProduct
         ON DimProduct.ProductKey = FactSales.ProductKey
     GROUP BY DimProduct.ColorName
-    HAVING SUM(FactSales.SalesAmount) >= 3000000
+    HAVING SUM(FactSales.SalesQuantity) >= 3000000
     
 -- 3 Crie um agrupamento do zero. Obs: precisará fazer mais do que 1 INNER JOIN, dado que a relação entre FactSales e DimProductCategory não é direta
 
@@ -199,15 +200,13 @@ USE ContosoRetailDW;
 
     SELECT
         DimScenario.ScenarioName,
-        SUM(FactExchangeRate.AverageRate) AS 'Média total',
-        SUM(FactExchangeRate.EndOfDayRate) AS 'TOTAL DIA'
+        SUM(FactStrategyPlan.Amount) AS 'total'
     FROM
         FactStrategyPlan
     INNER JOIN DimScenario
         ON FactStrategyPlan.ScenarioKey = DimScenario.ScenarioKey
-        INNER JOIN FactExchangeRate
-            ON FactStrategyPlan.CurrencyKey = FactExchangeRate.CurrencyKey
     GROUP BY DimScenario.ScenarioName
+    HAVING DimScenario.ScenarioName IN ('Actual', 'Budget')
 
 -- 8 Faça uma tabela resumo mostrando o resultado do planejamento estratégico agrupado por ano
 
