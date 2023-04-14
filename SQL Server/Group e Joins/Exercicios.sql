@@ -150,3 +150,119 @@ USE ContosoRetailDW;
     DimCustomer.LastName, 
     DimProduct.ProductName
     ORDER BY SUM(FactOnlineSales.SalesQuantity) DESC
+
+-- 5 Faça um resumo mostrando o total de produtos comprados (SalesQuantity) de acordo com o sexo dos clientes
+
+USE ContosoRetailDW;
+
+    SELECT TOP(100) * FROM FactOnlineSales
+    SELECT * FROM DimCustomer
+
+    SELECT
+        DimCustomer.Gender,
+        SUM(FactOnlineSales.SalesQuantity) AS 'TOTAL VENDIDO'
+    FROM 
+        FactOnlineSales
+    INNER JOIN DimCustomer
+        ON FactOnlineSales.CustomerKey = DimCustomer.CustomerKey
+    WHERE DimCustomer.Gender IS NOT NULL
+    GROUP BY DimCustomer.Gender
+    ORDER BY SUM(FactOnlineSales.SalesQuantity) DESC
+
+-- FACTEXCHANGERATE
+
+-- 6 Faça uma tabela resumo mostrando a taxa de cambio média de acordo com cada CurrencyDescription. A tabela final deve conter apenas taxas entre 10 e 100
+
+USE ContosoRetailDW;
+
+    SELECT * FROM DimCurrency
+    SELECT * FROM FactExchangeRate
+
+    SELECT
+        DimCurrency.CurrencyDescription,
+        AVG(FactExchangeRate.AverageRate) AS 'Taxa de cambio média'
+    FROM FactExchangeRate
+    INNER JOIN DimCurrency
+        ON FactExchangeRate.CurrencyKey = DimCurrency.CurrencyKey
+    WHERE FactExchangeRate.AverageRate BETWEEN 10 AND 100
+    GROUP BY DimCurrency.CurrencyDescription
+
+-- FACTSTRATEGYPLAN
+
+-- 7 Descubra o valor total na tabela FactExchangeRate destinado para os cenários: Actual e Budget
+
+USE ContosoRetailDW;
+
+    SELECT TOP(100) * FROM FactStrategyPlan
+    SELECT TOP(100) * FROM DimScenario
+    SELECT TOP(100) * FROM FactExchangeRate
+
+    SELECT
+        DimScenario.ScenarioName,
+        SUM(FactExchangeRate.AverageRate) AS 'Média total',
+        SUM(FactExchangeRate.EndOfDayRate) AS 'TOTAL DIA'
+    FROM
+        FactStrategyPlan
+    INNER JOIN DimScenario
+        ON FactStrategyPlan.ScenarioKey = DimScenario.ScenarioKey
+        INNER JOIN FactExchangeRate
+            ON FactStrategyPlan.CurrencyKey = FactExchangeRate.CurrencyKey
+    GROUP BY DimScenario.ScenarioName
+
+-- 8 Faça uma tabela resumo mostrando o resultado do planejamento estratégico agrupado por ano
+
+USE ContosoRetailDW;    
+
+    SELECT TOP(100) * FROM FactStrategyPlan
+    SELECT * FROM DimDate
+
+    SELECT TOP(100)
+        Dimdate.CalendarYear,
+        SUM(FactStrategyPlan.Amount) AS 'Total '
+    FROM
+        FactStrategyPlan
+    INNER JOIN DimDate
+        ON FactStrategyPlan.Datekey = DimDate.Datekey
+    GROUP BY DimDate.CalendarYear
+
+-- DIMPRODUCT/ DIMPRODUCTSUBCATEGORY
+
+-- 9 Faça um agrupamento da quantidade de produtos por ProductSubCategoryName. Leve em consideração em sua análise apenas a marca Contoso e a cor Silver
+
+USE ContosoRetailDW;
+
+    SELECT * FROM DimProduct
+    SELECT * FROM DimProductSubcategory
+
+    SELECT
+        DimProduct.BrandName,
+        DimProduct.ColorName,
+        DimProductSubcategory.ProductSubcategoryName,
+        COUNT(DimProductSubcategory.ProductSubcategoryName) AS 'TOTAL SUBCATEGORIA'
+    FROM
+        DimProduct
+    INNER JOIN DimProductSubcategory
+        ON DimProduct.ProductSubcategoryKey = DimProductSubcategory.ProductSubcategoryKey
+    WHERE BrandName = 'Contoso' AND ColorName = 'Silver'
+    GROUP BY 
+    DimProduct.BrandName, 
+    DimProduct.ColorName, 
+    DimProductSubcategory.ProductSubcategoryName
+
+-- 10 Faça um agrupamento duplo de quantidade de produtos por BrandName e ProductSubCategoryName. A tabela final deverá ser ordenada de acordo com a coluna BrandName
+
+USE ContosoRetailDW;
+
+    SELECT * FROM DimProduct
+    SELECT * FROM DimProductSubcategory
+
+    SELECT 
+        DimProduct.BrandName,
+        DimProductSubcategory.ProductSubcategoryName,
+        COUNT(DimProduct.ProductName) AS 'Total de produtos'
+    FROM 
+        DimProduct
+    INNER JOIN DimProductSubcategory
+        ON DimProduct.ProductSubcategoryKey = DimProductSubcategory.ProductSubcategoryKey
+    GROUP BY DimProduct.BrandName, DimProductSubcategory.ProductSubcategoryName
+    ORDER BY DimProduct.BrandName ASC
