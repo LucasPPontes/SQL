@@ -1,4 +1,5 @@
 -- Utilizando o PRINT para mostrar o resultado de uma consulta
+
 USE ContosoRetailDW;
 
     SELECT * FROM DimProduct
@@ -6,6 +7,7 @@ USE ContosoRetailDW;
 
 -- Exemplo 1: Printa na tela a quantidade de lojas On e a quantidade de lojas off da tabela DimStore. Utilize variáveis para isso
 
+SET NOCOUNT ON
 DECLARE @loja_on INT = (SELECT COUNT(*) FROM DimStore WHERE Status = 'On')
 
 DECLARE @loja_off INT = (SELECT COUNT(*) FROM DimStore WHERE Status = 'Off')
